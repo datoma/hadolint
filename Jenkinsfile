@@ -17,7 +17,7 @@ pipeline {
 
     TRIVY_VERSION = 'datoma/trivy-server:0.15.0'
     DOCKLE_VERSION = 'datoma/dockle:0.3.1'
-    HADOLINT_VERSION = 'hadolint/hadolint'
+    HADOLINT_VERSION = 'datoma/hadolint:1.21.0'
   }
 
   parameters{
@@ -80,7 +80,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry("${DOCKERHUB_URL}", "${DOCKERHUB_CREDENTIALS}") {
-            dockerHubImageLatest = docker.build("${DOCKERHUB_IMAGE_NAME}:latest")
+            dockerHubImageLatest = docker.build("${DOCKERHUB_IMAGE_NAME}:latest", "-f docker/Dockerfile .")
           }
         }
       }
@@ -90,7 +90,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry("${DOCKERHUB_URL}", "${DOCKERHUB_CREDENTIALS}") {
-            dockerHubImagetag = docker.build("${DOCKERHUB_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
+            dockerHubImagetag = docker.build("${DOCKERHUB_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f docker/Dockerfile .")
           }
         }
       }
@@ -170,8 +170,8 @@ pipeline {
       }
       steps {
         script {
-          artifactoryImageLatest = docker.build("${ARTIFACTORY_IMAGE_NAME}:latest")
-          artifactoryImageTag = docker.build("${ARTIFACTORY_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
+          artifactoryImageLatest = docker.build("${ARTIFACTORY_IMAGE_NAME}:latest", "-f docker/Dockerfile .")
+          artifactoryImageTag = docker.build("${ARTIFACTORY_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f docker/Dockerfile .")
         }
       }
     }
